@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.powernode.mapper.BillsMapper">
+  <resultMap id="BaseResultMap" type="com.powernode.domain.Bills">
+    <!--@mbg.generated-->
+    <!--@Table bills-->
+    <id column="id" property="id" />
+    <result column="title" property="title" />
+    <result column="bill_time" property="billTime" />
+    <result column="type_id" property="typeId" />
+    <result column="price" property="price" />
+    <result column="remark" property="remark" />
+    <result column="name" property="name" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, title, bill_time, type_id, price, remark
+  </sql>
+
+  <delete id="delectById">
+    delete from bills where 1=1 and id=#{id}
+    </delete>
+
+  <select id="page" resultMap="BaseResultMap">
+    select t1.id, t1.title, t1.bill_time, t1.type_id, t1.price, t1.remark,b2.name from bills as t1
+    join bill_type b2 on t1.type_id = b2.id
+    <where>
+      <if test="typeId != null">
+        type_id=#{typeId}
+      </if>
+      <if test="billTime1 != null and billTime2 != null">
+        and bill_time between #{billTime1} and #{billTime2}
+      </if>
+    </where>
+  </select>
+
+  <update id="updateById">
+    update bills set
+    title=#{title},
+    bill_time=#{billTime},
+    type_id=#{typeId},
+    price=#{price},
+    remark=#{remark}
+    where id=#{id}
+  </update>
+
+  <insert id="add">
+    insert into bills (id, title, bill_time, type_id, price, remark)
+            VALUE (0,#{title},#{billTime},#{typeId},#{price},#{remark})
+  </insert>
+</mapper>

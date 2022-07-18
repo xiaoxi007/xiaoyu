@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>记账本</title>
+    <style>
+        body{
+            margin: 0;
+            height: 100%;
+            background-attachment: fixed;
+            background-repeat:no-repeat;
+        }
+        #app{
+            width: 330px;
+            height: 400px;
+            margin: auto;
+            position: relative;
+            top: 200px;
+            left: 30%;
+        }
+        .item-top-padding{
+            padding-top: 20px;
+        }
+        h3{
+            text-align: center;
+        }
+
+    </style>
+    <script src="js/vue.js"></script>
+    <link rel="stylesheet" href="js/index.css">
+    <script src="js/index.js"></script>
+    <script src="js/jQuery-3.6.0.js"></script>
+</head>
+<body style="background-image: url(imgs/2.png);background-size:100%;">
+<div id="app" >
+
+    <el-row>
+        <el-col>
+
+            <h3 style="color: khaki" > 欢迎使用</h3>
+            <el-form :model="loginForm" ref="loginFormRef" :rules="loginFormRules">
+                <el-form-item prop="name">
+                    <el-input
+                            prefix-icon="el-icon-user-solid"
+                            placeholder="请输入账号"
+                            v-model="loginForm.name"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item class="item-top-padding" prop="pwd">
+                    <el-input
+                            prefix-icon="el-icon-unlock"
+                            placeholder="请输入密码"
+                            v-model="loginForm.pwd"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item class="item-top-padding">
+                    <el-button type="success" style="width: 100%" @click="doLogin" native-type="button">登   录</el-button>
+                </el-form-item>
+            </el-form>
+
+
+            <img src="imgs/1.gif" height="74" width="362"/></el-col>
+
+
+    </el-row>
+
+</div>
+<script>
+    // 配置项
+    let option = {
+        el:"#app",
+        data:{ // 数据
+           /* code:'user/code.do',*/
+            //登录的表单数据
+            loginForm:{
+                name:undefined,
+                pwd:undefined,
+               /* code:undefined*/
+            },
+            //校验规则
+            loginFormRules:{
+                name:[{required:true,message:"请输入登录账号",trigger:"blur"}],
+                pwd:[{required:true,message:"请输入密码",trigger:"blur"}]
+               /* code:[{required:true,message:"请输入验证码",trigger:"blur"}],*/
+            },
+            url:{
+                login:"user/login"
+            }
+
+        },
+        methods:{
+         /*   getCode(){
+                this.code = 'user/code.do?'+new Date();
+            },*/
+            // 进行具体的登录
+            doLogin(){
+                // 进行数据校验 通过则提交
+                this.$refs.loginFormRef.validate(rs=>{
+                    if (!rs){
+                        return;
+                    }
+                    // 进行数据提交
+                    $.post(this.url.login,this.loginForm,rs=>{
+                        //  如果code 不为 0 则说明失败了  则将错误信息 进行提示
+                        if (rs.code != 0){
+                            this.$message.error(rs.msg);
+                            return;
+                        }
+                        // 成功
+                        let user = rs.data;
+                        //将结果中的数据（用户信息 存储到 sessiostorage）
+                        sessionStorage.setItem("user",JSON.stringify(user))
+                        //页面跳转
+                        location.href = "template.html";
+                    })
+                });
+            }
+        }
+    }
+    const  app = new Vue(option);
+</script>
+
+</body>
+</html>

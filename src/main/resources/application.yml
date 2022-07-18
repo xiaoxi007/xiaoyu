@@ -1,0 +1,65 @@
+# 配置连接池
+spring:
+  datasource:
+    # 配置连接池的连接信息
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/cashbook?useUnicode=true&useSSL=false&characterEncoding=UTF8
+      username: root
+      password: 123456
+      # 连接池的配置信息
+      # 最大的活动连接数
+      max-active: 20
+      #最小链接数量
+      min-idle: 10
+      #初始化链接数
+      initial-size: 5
+      #超时时间
+      max-wait: 6000
+      #配置间隔多久才进行的一次检测，检测需要关系的空闲链接，单位是毫秒
+      time-between-eviction-runs-millis: 2000
+      #配置一个链接在池中最小的生成时间，单位是毫秒
+      min-evictable-idle-time-millis: 600000
+      #监控配置信息
+      stat-view-servlet:
+        #启用监控界面
+        enabled: true
+        #监控servlet的访问规则
+        url-pattern: /druid/*
+        #监控页面的账号和密码
+        login-username: admin
+        login-password: 123123
+        #ip 白名单
+        allow:
+        #ip 黑名单
+        deny:
+        #是否允许清空统计数据
+        reset-enable: false
+      #开启具体的监控(过滤)
+      filters: stat,wall
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+#mybatis配置信息
+mybatis:
+  #映射文件
+  mapper-locations: classpath:/mapper/*.xml
+
+  type-aliases-package: com.powernode.domain
+
+  # 日志
+logging:
+  level:
+    com.powernode.mapper: debug
+
+swagger3:
+  basePackage: com.powernode.controller
+  name: MrS
+  url: "www.powernode.com"
+  email: "123@qq.com"
+  version: v1.0
+  group-name: "测试项目"
+  title: "swagger示例"
+  terms-of-service-url: "光谷大道"
+  license: "证书"
+  license-url: "证书地址"
